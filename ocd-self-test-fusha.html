@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>اختبر نفسك - الوسواس القهري</title>
+<link href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #edf2f7;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Readex Pro', sans-serif;
+    padding: 30px 16px;
+  }
+
+  .card {
+    background: #ffffff;
+    border-radius: 32px;
+    max-width: 500px;
+    width: 100%;
+    overflow: hidden;
+    box-shadow: 0 12px 50px rgba(0,0,0,0.12);
+    animation: up 0.6s ease both;
+  }
+
+  @keyframes up {
+    from { opacity:0; transform:translateY(20px); }
+    to { opacity:1; transform:translateY(0); }
+  }
+
+  .header {
+    background: linear-gradient(135deg, #1a3c5e, #0d2238);
+    padding: 30px 26px 26px;
+    text-align: center;
+  }
+
+  .header-emoji { font-size: 48px; display: block; margin-bottom: 12px; }
+
+  .tag {
+    display: inline-block;
+    background: rgba(255,255,255,0.1);
+    color: #90bfe0;
+    font-size: 11px; font-weight: 600;
+    padding: 5px 14px; border-radius: 30px;
+    margin-bottom: 14px; letter-spacing: 0.8px;
+  }
+
+  .header h1 {
+    font-size: 22px; font-weight: 700;
+    color: #ffffff; line-height: 1.4;
+  }
+
+  .header p {
+    font-size: 13px; color: #7aaac8;
+    margin-top: 8px; line-height: 1.8;
+  }
+
+  .progress-wrap {
+    padding: 16px 24px 0;
+  }
+
+  .progress-info {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px; color: #9aacbe;
+    margin-bottom: 8px; font-weight: 600;
+  }
+
+  .progress-track {
+    height: 6px;
+    background: #e8f0f8;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #1a6fb5, #3a9fd5);
+    border-radius: 10px;
+    transition: width 0.4s ease;
+  }
+
+  .questions { padding: 20px 24px; }
+
+  .question-block { display: none; }
+  .question-block.active { display: block; animation: fadeIn 0.3s ease; }
+
+  @keyframes fadeIn {
+    from { opacity:0; transform:translateY(8px); }
+    to { opacity:1; transform:translateY(0); }
+  }
+
+  .q-num {
+    font-size: 11px; font-weight: 700;
+    color: #1a6fb5; letter-spacing: 1px;
+    margin-bottom: 10px;
+  }
+
+  .q-text {
+    font-size: 17px; font-weight: 700;
+    color: #0d2238; line-height: 1.5;
+    margin-bottom: 18px;
+  }
+
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .option {
+    padding: 14px 18px;
+    border-radius: 14px;
+    border: 2px solid #e0eaf4;
+    background: #f8fafc;
+    font-size: 15px; color: #2a4a62;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: right;
+  }
+
+  .option:hover {
+    border-color: #1a6fb5;
+    background: #eef6ff;
+    color: #0d2238;
+  }
+
+  .option.selected {
+    border-color: #1a6fb5;
+    background: #1a6fb5;
+    color: #ffffff;
+  }
+
+  .nav {
+    padding: 0 24px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .btn-back {
+    padding: 12px 20px;
+    border-radius: 12px;
+    border: 2px solid #e0eaf4;
+    background: transparent;
+    font-size: 14px; color: #7a9ab8;
+    font-weight: 600; cursor: pointer;
+    font-family: 'Readex Pro', sans-serif;
+    transition: all 0.2s;
+  }
+
+  .btn-back:hover { border-color: #1a6fb5; color: #1a6fb5; }
+
+  .btn-next {
+    flex: 1;
+    padding: 14px 20px;
+    border-radius: 14px;
+    border: none;
+    background: linear-gradient(135deg, #1a6fb5, #0d4a80);
+    font-size: 15px; color: #ffffff;
+    font-weight: 700; cursor: pointer;
+    font-family: 'Readex Pro', sans-serif;
+    transition: all 0.2s;
+    opacity: 0.4;
+    pointer-events: none;
+  }
+
+  .btn-next.enabled {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  .btn-next.enabled:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(26,111,181,0.3); }
+
+  .result { display: none; padding: 24px; }
+  .result.show { display: block; animation: fadeIn 0.4s ease; }
+
+  .result-header {
+    border-radius: 20px;
+    padding: 24px 20px;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .result-emoji { font-size: 52px; display: block; margin-bottom: 12px; }
+
+  .result-title {
+    font-size: 20px; font-weight: 700;
+    margin-bottom: 8px;
+  }
+
+  .result-sub {
+    font-size: 14px; line-height: 1.85; font-weight: 400;
+  }
+
+  .result-low .result-header { background: #f0fff4; }
+  .result-low .result-title { color: #1a6b3a; }
+  .result-low .result-sub { color: #2a7a4a; }
+
+  .result-mid .result-header { background: #fffbeb; }
+  .result-mid .result-title { color: #92600a; }
+  .result-mid .result-sub { color: #7a5a2a; }
+
+  .result-high .result-header { background: #fff5f5; }
+  .result-high .result-title { color: #9b2c2c; }
+  .result-high .result-sub { color: #822727; }
+
+  .result-note {
+    background: #f0f6ff;
+    border: 1.5px solid #bee3f8;
+    border-right: 4px solid #1a6fb5;
+    border-radius: 0 14px 14px 0;
+    padding: 16px 18px;
+    font-size: 14px; color: #1a4a72;
+    line-height: 1.9; margin-bottom: 16px;
+  }
+
+  .result-note b { color: #0d2238; font-weight: 700; }
+
+  .btn-retry {
+    width: 100%;
+    padding: 14px;
+    border-radius: 14px;
+    border: 2px solid #e0eaf4;
+    background: transparent;
+    font-size: 14px; color: #7a9ab8;
+    font-weight: 600; cursor: pointer;
+    font-family: 'Readex Pro', sans-serif;
+    transition: all 0.2s;
+  }
+
+  .btn-retry:hover { border-color: #1a6fb5; color: #1a6fb5; }
+
+  .footer {
+    padding: 14px 24px;
+    border-top: 1.5px solid #f0f3f6;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+
+  .author { font-size: 12px; color: #7a8fa0; font-weight: 600; }
+  .hash { font-size: 11px; color: #b0c0cc; direction: ltr; }
+</style>
+</head>
+<body>
+<div class="card">
+
+  <div class="header">
+    <span class="header-emoji">🧩</span>
+    <div class="tag">اختبر نفسك</div>
+    <h1>هل تعاني من الوسواس القهري؟</h1>
+    <p>سبعة أسئلة بسيطة تساعدك على معرفة نفسك أكثر</p>
+  </div>
+
+  <div class="progress-wrap">
+    <div class="progress-info">
+      <span id="q-counter">السؤال ١ من ٧</span>
+      <span id="q-percent">١٤٪</span>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" id="progress-fill" style="width:14%"></div>
+    </div>
+  </div>
+
+  <div class="questions" id="questions-wrap">
+
+    <div class="question-block active" data-q="0">
+      <div class="q-num">السؤال الأول</div>
+      <div class="q-text">هل تراودك أفكار مزعجة أو مخيفة دون أن تستطيع إيقافها؟</div>
+      <div class="options">
+        <div class="option" data-val="0">لا، نادرًا أو أبدًا</div>
+        <div class="option" data-val="1">أحيانًا، لكنها تمر بسرعة</div>
+        <div class="option" data-val="2">نعم، وتظل معي وقتًا طويلًا</div>
+      </div>
+    </div>
+
+    <div class="question-block" data-q="1">
+      <div class="q-num">السؤال الثاني</div>
+      <div class="q-text">هل تتحقق من أشياء كالباب أو الأجهزة الكهربائية أكثر من مرة؟</div>
+      <div class="options">
+        <div class="option" data-val="0">لا، مرة واحدة تكفي</div>
+        <div class="option" data-val="1">أحيانًا مرتين، لكن ليس دائمًا</div>
+        <div class="option" data-val="2">نعم، أتحقق كثيرًا</div>
+      </div>
+    </div>
+
+    <div class="question-block" data-q="2">
+      <div class="q-num">السؤال الثالث</div>
+      <div class="q-text">هل تشعر أنك مضطر إلى فعل شيء بطريقة محددة بالضبط وإلا ستحدث مشكلة؟</div>
+      <div class="options">
+        <div class="option" data-val="0">لا، لا يحدث معي ذلك</div>
+        <div class="option" data-val="1">في أمور بسيطة فقط</div>
+        <div class="option" data-val="2">نعم، ويؤثر على يومي</div>
+      </div>
+    </div>
+
+    <div class="question-block" data-q="3">
+      <div class="q-num">السؤال الرابع</div>
+      <div class="q-text">هل تطلب من المقربين منك تطمينك على الموضوع ذاته أكثر من مرة؟</div>
+      <div class="options">
+        <div class="option" data-val="0">لا، لا أفعل ذلك</div>
+        <div class="option" data-val="1">نادرًا وفي مواقف معينة</div>
+        <div class="option" data-val="2">نعم، وأبقى بحاجة إلى التطمين</div>
+      </div>
+    </div>
+
+    <div class="question-block" data-q="4">
+      <div class="q-num">السؤال الخامس</div>
+      <div class="q-text">هل تؤثر هذه الأفكار على عملك أو علاقاتك أو حياتك اليومية؟</div>
+      <div class="options">
+        <div class="option" data-val="0">لا، أكمل حياتي بشكل طبيعي</div>
+        <div class="option" data-val="1">قليلًا، لكن ليس كثيرًا</div>
+        <div class="option" data-val="2">نعم، تؤثر عليّ بشكل واضح</div>
+      </div>
+    </div>
+
+    <div class="question-block" data-q="5">
+      <div class="q-num">السؤال السادس</div>
+      <div class="q-text">هل تحاول طرد هذه الأفكار أو تشغل نفسك حتى لا تفكر فيها؟</div>
+      <div class="options">
+        <div class="option" data-val="0">لا، أتركها تمر</div>
+        <div class="option" data-val="1">أحيانًا أشغل نفسي</div>
+        <div class="option" data-val="2">نعم، أحاول الهروب منها دائمًا</div>
+      </div>
+    </div>
+
+    <div class="question-block" data-q="6">
+      <div class="q-num">السؤال السابع</div>
+      <div class="q-text">هل تجعلك هذه الأفكار تشعر بالذنب أو الخوف من أنك "شخص مخطئ"؟</div>
+      <div class="options">
+        <div class="option" data-val="0">لا، لا يحدث ذلك</div>
+        <div class="option" data-val="1">أحيانًا، لكنه يمر لاحقًا</div>
+        <div class="option" data-val="2">نعم، ويؤثر في نظرتي إلى نفسي</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- RESULT -->
+  <div class="result" id="result-wrap">
+    <div id="result-content"></div>
+    <div class="result-note" id="result-note"></div>
+    <button class="btn-retry" onclick="resetTest()">🔄 أعد الاختبار</button>
+  </div>
+
+  <div class="nav" id="nav-wrap">
+    <button class="btn-back" id="btn-back" onclick="prevQ()" style="display:none">→ السابق</button>
+    <button class="btn-next" id="btn-next" onclick="nextQ()">التالي ←</button>
+  </div>
+
+  <div class="footer">
+    <span class="author">أحمد الصمدي — معالج سلوكي معرفي</span>
+    <span class="hash">#الوسواس_القهري #اختبر_نفسك</span>
+  </div>
+
+</div>
+
+<script>
+  const totalQ = 7;
+  let current = 0;
+  let answers = new Array(totalQ).fill(null);
+
+  const arabicNums = ['١','٢','٣','٤','٥','٦','٧'];
+
+  function updateProgress() {
+    const pct = Math.round(((current + 1) / totalQ) * 100);
+    document.getElementById('progress-fill').style.width = pct + '%';
+    document.getElementById('q-counter').textContent = 'السؤال ' + arabicNums[current] + ' من ٧';
+    document.getElementById('q-percent').textContent = pct + '٪';
+  }
+
+  function updateNav() {
+    const backBtn = document.getElementById('btn-back');
+    const nextBtn = document.getElementById('btn-next');
+    backBtn.style.display = current > 0 ? 'block' : 'none';
+    if (answers[current] !== null) {
+      nextBtn.classList.add('enabled');
+    } else {
+      nextBtn.classList.remove('enabled');
+    }
+    if (current === totalQ - 1) {
+      nextBtn.textContent = 'اعرف النتيجة 🎯';
+    } else {
+      nextBtn.textContent = 'التالي ←';
+    }
+  }
+
+  document.querySelectorAll('.question-block').forEach((block, qi) => {
+    block.querySelectorAll('.option').forEach(opt => {
+      opt.addEventListener('click', () => {
+        block.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+        opt.classList.add('selected');
+        answers[qi] = parseInt(opt.dataset.val);
+        updateNav();
+      });
+    });
+  });
+
+  function nextQ() {
+    if (answers[current] === null) return;
+    if (current < totalQ - 1) {
+      document.querySelectorAll('.question-block')[current].classList.remove('active');
+      current++;
+      document.querySelectorAll('.question-block')[current].classList.add('active');
+      updateProgress();
+      updateNav();
+    } else {
+      showResult();
+    }
+  }
+
+  function prevQ() {
+    if (current > 0) {
+      document.querySelectorAll('.question-block')[current].classList.remove('active');
+      current--;
+      document.querySelectorAll('.question-block')[current].classList.add('active');
+      updateProgress();
+      updateNav();
+    }
+  }
+
+  function showResult() {
+    const total = answers.reduce((a, b) => a + b, 0);
+    document.getElementById('questions-wrap').style.display = 'none';
+    document.getElementById('nav-wrap').style.display = 'none';
+    document.querySelector('.progress-wrap').style.display = 'none';
+
+    let html = '';
+    let noteHtml = '';
+
+    if (total <= 4) {
+      html = `<div class="result-header result-low">
+        <span class="result-emoji">😌</span>
+        <div class="result-title">مستوى القلق لديك طبيعي</div>
+        <div class="result-sub">ردود أفعالك طبيعية تجاه مواقف الحياة اليومية — ولا توجد علامات واضحة على وسواس قهري.</div>
+      </div>`;
+      noteHtml = `<b>ملاحظة مهمة:</b> هذا الاختبار ليس تشخيصًا طبيًا. إذا كنت تشعر بضيق نفسي بشكل عام، فالتحدث مع متخصص دائمًا مفيد.`;
+    } else if (total <= 9) {
+      html = `<div class="result-header result-mid">
+        <span class="result-emoji">🤔</span>
+        <div class="result-title">ثمة علامات تستحق الانتباه</div>
+        <div class="result-sub">توجد بعض الأنماط التي قد تكون بداية قلق أو وسواس. ليس بالضرورة مرضًا، لكنه يستحق التحدث مع متخصص.</div>
+      </div>`;
+      noteHtml = `<b>الخطوة التالية:</b> لا تنتظر حتى تتفاقم الأمور. التدخل المبكر يُحدث فارقًا كبيرًا في رحلة العلاج — والتحدث مع معالج يساعدك على فهم نفسك أكثر.`;
+    } else {
+      html = `<div class="result-header result-high">
+        <span class="result-emoji">💙</span>
+        <div class="result-title">ثمة علامات قوية على وسواس قهري</div>
+        <div class="result-sub">ما تشعر به حقيقي، وهذا ليس ضعفًا منك — بل هو مرض حقيقي وله علاج فعّال.</div>
+      </div>`;
+      noteHtml = `<b>كلام مهم:</b> هذه النتيجة ليست تشخيصًا، لكنها إشارة إلى أنك بحاجة إلى دعم متخصص. الوسواس القهري من أكثر الأمراض النفسية استجابةً للعلاج — أنت لست وحدك في هذا.`;
+    }
+
+    document.getElementById('result-content').innerHTML = html;
+    document.getElementById('result-note').innerHTML = noteHtml;
+    document.getElementById('result-wrap').classList.add('show');
+  }
+
+  function resetTest() {
+    current = 0;
+    answers = new Array(totalQ).fill(null);
+    document.querySelectorAll('.question-block').forEach((b, i) => {
+      b.classList.toggle('active', i === 0);
+      b.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+    });
+    document.getElementById('questions-wrap').style.display = 'block';
+    document.getElementById('nav-wrap').style.display = 'flex';
+    document.querySelector('.progress-wrap').style.display = 'block';
+    document.getElementById('result-wrap').classList.remove('show');
+    updateProgress();
+    updateNav();
+  }
+
+  updateProgress();
+  updateNav();
+</script>
+
+</body>
+</html>
